@@ -2,13 +2,13 @@ package model;
 
 import java.util.Arrays;
 
-public class MyHashTable {
+public class MySymbolTable {
 
-    private String[] symbolTable;
+    private String[] hashTable;
     private int capacity;
 
-    public MyHashTable(int capacity) {
-        this.symbolTable = new String[capacity];
+    public MySymbolTable(int capacity) {
+        this.hashTable = new String[capacity];
         this.capacity = capacity;
     }
 
@@ -31,7 +31,7 @@ public class MyHashTable {
      * */
     public boolean insert(String identifier) {
         // Check if already in sym table
-        for (String s : this.symbolTable) {
+        for (String s : this.hashTable) {
             if (s != null && s.equals(identifier)) {
                 System.out.println("Identifier already in the symbol table.");
                 return false;
@@ -39,19 +39,19 @@ public class MyHashTable {
         }
 
         int hashValue = this.hashFunction(identifier);
-        if (this.symbolTable[hashValue] == null) {
-            this.symbolTable[hashValue] = identifier;
+        if (this.hashTable[hashValue] == null) {
+            this.hashTable[hashValue] = identifier;
             System.out.println("Inserted " + identifier + " at position " + hashValue);
             return true;
         }
 
         // Else, we have a collision
         int nextAvailablePosition = hashValue;
-        while (this.symbolTable[nextAvailablePosition] != null) {
+        while (this.hashTable[nextAvailablePosition] != null) {
             nextAvailablePosition++;
         }
-        if (this.symbolTable[nextAvailablePosition] == null) {
-            this.symbolTable[nextAvailablePosition] = identifier;
+        if (this.hashTable[nextAvailablePosition] == null) {
+            this.hashTable[nextAvailablePosition] = identifier;
             System.out.println("Inserted " + identifier + " at position " + nextAvailablePosition);
             return true;
         }
@@ -71,8 +71,8 @@ public class MyHashTable {
 
     public int lookup(String identifier) {
         int hashValue = hashFunction(identifier);
-        while (this.symbolTable[hashValue] != null) {
-            if(this.symbolTable[hashValue].equalsIgnoreCase(identifier)) {
+        while (this.hashTable[hashValue] != null) {
+            if(this.hashTable[hashValue].equalsIgnoreCase(identifier)) {
                 return hashValue;
             }
             hashValue ++;
@@ -80,10 +80,14 @@ public class MyHashTable {
         return -1;
     }
 
+    public String[] getSymTable() {
+        return this.hashTable;
+    }
+
     @Override
     public String toString() {
         return "HashTable{" +
-                "symbolTable=" + Arrays.toString(this.symbolTable) +
+                "symbolTable=" + Arrays.toString(this.hashTable) +
                 '}';
     }
 }

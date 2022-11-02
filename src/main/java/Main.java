@@ -1,10 +1,10 @@
-import model.MyHashTable;
+import model.MySymbolTable;
 
 public class Main {
 
     public static void main(String[] args) {
         System.out.println("Inserting values ...");
-        MyHashTable symTable = new MyHashTable(17);
+        MySymbolTable symTable = new MySymbolTable(17);
 
         // Inserting some values
         symTable.insert("c");
