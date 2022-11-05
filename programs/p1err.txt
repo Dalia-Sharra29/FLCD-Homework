@@ -1,0 +1,19 @@
+INT: 1nr, nr2, nr3;
+INT: max;
+{
+	max = 0;
+	IF ( nr1 >= nr2 )
+	  IF( nr1 >= nr3 )
+	     max <- nr1; 
+	ENDIF
+	IF ( nr2 >= nr1 )
+	  IF ( nr2 >= nr3 )
+	     max <- nr2;
+	  ENDIF          	
+	ENDIF
+	IF ( nr3 >= nr2 )
+	  IF ( nr3 >= nr1 )
+	     max <- nr3;
+	  ENDIF          	
+	ENDIF
+}

@@ -2,40 +2,25 @@ package model;
 
 import javafx.util.Pair;
 
-import java.io.File;
-import java.io.FileNotFoundException;
-import java.io.IOException;
-import java.io.PrintWriter;
+import java.io.*;
 import java.util.*;
-
-/**
- * While (not(eof)) do
- *     detect(token);
- *     if token is reserved word OR operator OR separator
- *         then genPIF(token, 0)
- *         else
- *         if token is identifier OR constant
- *             then index = pos(token, ST);
- *                 genPIF(token, index)
- *             else message “Lexical error”
- *         endif
- *     endif
- * end while
- **/
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 public class MyScanner {
     private String fileName;
 
-    private List<String> tokenList = new ArrayList<String>();
-    private List<String> separatorList = new ArrayList<String>();
+    private List<String> tokenList = new ArrayList<>();
+    private List<String> separatorList = new ArrayList<>();
     private List<Pair<String, Integer>> detectedTokens = new ArrayList<>();
-    private Map<String, Integer> PIF = new HashMap<String, Integer>();
-    private Map<Integer, String> ST = new HashMap<Integer, String>();
+    private Map<String, Integer> PIF = new HashMap<>();
+    private Map<Integer, String> ST = new HashMap<>();
+    private final String delimitersRegex = "\\s|;|,|:";
 
     private int capacity = 97;
     private MySymbolTable symbolTable = new MySymbolTable(capacity);
 
-    private MyScanner(String fileName) {
+    public MyScanner(String fileName) {
         this.fileName = fileName;
         this.readTokens();
         this.readSeparators();
@@ -60,7 +45,7 @@ public class MyScanner {
         try {
             File file_in = new File("scanner-files/token.in");
             Scanner myReader = new Scanner(file_in);
-            for (int i = 0; i < 18; i++){
+            for (int i = 0; i < 22; i++){
                 String data = myReader.nextLine();
                 separatorList.add(data);
             }
@@ -85,18 +70,26 @@ public class MyScanner {
     }
 
     private Boolean isConstant(String token){
+        // check if string
+        Matcher m = null;
+        if(token.charAt(0) == '"' && token.charAt(token.length()-1) == '"'){
+            StringBuffer sb= new StringBuffer(token);
+            sb.deleteCharAt(0);
+            sb.deleteCharAt(sb.length() - 1);
+            Pattern p = Pattern.compile("(^[a-zA-Z]+[ !_0-9a-zA-Z]*)");
+            m = p.matcher(sb);
+        }
         return token.matches("\\-?[1-9]+[0-9]*|0") // numberconst
                 || token.matches("'[a-zA-Z0-9._-]'") // charconst
-                || token.matches("\"[a-zA-Z0-9_.-]*\"") //stringconst
                 || token.equals("true")
-                || token.equals("false");
+                || token.equals("false")
+                || (m!=null && m.matches());
     }
 
     public void classifyTokens() throws IOException {
         PrintWriter pw = new PrintWriter("D:/Facultate/Semestrul-5/Formal-Languages-and-Compiler-Design/Labs/Lab2/SymbolTableImplementation//scanner-files/pif.out");
         pw.printf("%-20s %s\n", "Token", "ST_Pos");
 
-        Integer lastLine = 0;
         for (Pair<String, Integer> pair: this.detectedTokens) {
             if (isReservedOperatorSeparator(pair.getKey())) {
                 pw.printf("%-20s %d\n", pair.getKey(), -1);
@@ -107,9 +100,8 @@ public class MyScanner {
                 int position = symbolTable.lookup(pair.getKey());
                 pw.printf("%-20s %d\n", pair.getKey(), position);
             } else {
-                System.out.println("LEXICAL ERROR " + pair.getKey() + " AT LINE " + (pair.getValue()));
+                System.out.println("LEXICAL ERROR: " + pair.getKey() + " AT LINE " + (pair.getValue()));
             }
-            lastLine = pair.getValue();
         }
         pw.flush();
     }
@@ -128,35 +120,41 @@ public class MyScanner {
         pw.flush();
     }
 
-    public void scan() {
+    public void scan(){
+        BufferedReader reader;
+        int lineNo = 1;
         try {
-            File myObj = new File(this.fileName);
-            Scanner myReader = new Scanner(myObj);
-            while (myReader.hasNextLine()) {
-                Scanner data = new Scanner(myReader.nextLine());
-                while (data.hasNext()) {
-                    String word = data.next();
-                    boolean hasSeparator = false;
-
-                    for (String separator : separatorList) {
-                        // General separator cases
-                        if (word.contains(separator)) {
-                            hasSeparator = true;
-                           // TODO: split the word by separator
-                            break;
-                        }
-                    }
-
-                }
+            reader = new BufferedReader(new FileReader(this.fileName));
+            String line = reader.readLine();
+            while (line != null) {
+                scanLine(line, lineNo);
+                lineNo++;
+                line = reader.readLine();
             }
-            myReader.close();
-        } catch (FileNotFoundException e) {
+            reader.close();
+        } catch (IOException e) {
             System.out.println("An error occurred.");
             e.printStackTrace();
         }
     }
 
-    public void splitWordWithSeparator(String word, String separator)
-    {
+    public void scanLine(String line, Integer numberOfLine) {
+        // check if line contains string
+        if(line.contains("\"")){
+            int indexOfQuote1 = line.indexOf("\"");
+            int indexOfQuote2 = line.indexOf("\"", indexOfQuote1 + 1);
+
+            String stringConst = line.substring(indexOfQuote1, indexOfQuote2 + 1);
+            line = line.replace(stringConst, "");
+            detectedTokens.add(new Pair<>(stringConst, numberOfLine));
+        }
+
+        String splitters = "((?="+delimitersRegex+")|(?<="+delimitersRegex+"))";
+        String[] tokens = line.split(splitters);
+        for (String symbol : tokens) {
+            if(!Objects.equals(symbol, " ") && !Objects.equals(symbol, "\t")) {
+                detectedTokens.add(new Pair<>(symbol, numberOfLine));
+            }
+        }
     }
 }

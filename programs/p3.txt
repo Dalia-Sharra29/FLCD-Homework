@@ -1,0 +1,18 @@
+INT ARRAY [ 100 ]: numbers;
+INT: len, n, i;
+INT: sum;
+{
+    len <- 100;
+    i <- 0;
+    sum <- 0;
+    WHILE ( i < len OR n != 0 )
+        READ ( n );
+        numbers [ i ] <- n;
+        i <- i + 1;
+    ENDWHILE
+    length <- i;
+    FOR ( i <- 0; i < len; i ++ )
+        sum <- sum + numbers [ i ];
+    ENDFOR
+    WRITE ( sum );
+}
