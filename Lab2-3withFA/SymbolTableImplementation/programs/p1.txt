@@ -1,0 +1,20 @@
+INT: nr1_, n1r, nr3;
+INT: max;
+{
+	n1r <- 0;
+	if ( nr1 >= nr2 )
+	  IF ( nr1 >= nr3 )
+		max <- nr1;
+	  ENDIF          	
+	ENDIF
+	IF ( nr2 >= nr1 )
+	  IF ( nr2 >= nr3 )
+		max <- nr2;
+	  ENDIF          	
+	ENDIF
+	IF ( nr3 >= nr2 )
+	  IF ( nr3 >= nr1 )
+		max <- nr3;
+	  ENDIF          	
+	ENDIF
+}

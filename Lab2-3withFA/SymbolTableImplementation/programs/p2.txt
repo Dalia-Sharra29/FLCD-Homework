@@ -1,0 +1,24 @@
+INT: n;
+INT: i;
+INT: stop;
+INT: checker;
+BOOLEAN: isPrime;
+{
+    isPrime <- true;
+    READ ( n );
+    IF ( n = 0 OR n = 1 )
+	    isPrime <- false;
+    ENDIF
+    stop <- n DIV 2;
+    FOR ( i <- 2; i < stop; i ++ )
+        checker <- n MOD i;
+        IF ( checker = 0 )
+            isPrime <- false; 
+        ENDIF
+    ENDFOR
+    IF ( isPrime = true )
+        WRITE ( "Number is prime!" );
+    ELSE
+        WRITE ( "Number is not prime!" );
+    ENDIF
+} 
