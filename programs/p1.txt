@@ -1,8 +1,8 @@
-INT: nr1, nr2, nr3;
+INT: nr1, n1r, nr3;
 INT: max;
 {
-	max <- 0;
-	IF ( nr1 >= nr2 )
+	n1r <- 0;
+	if ( nr1 >= nr2 )
 	  IF ( nr1 >= nr3 )
 		max <- nr1;
 	  ENDIF          	

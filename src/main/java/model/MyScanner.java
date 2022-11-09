@@ -91,7 +91,7 @@ public class MyScanner {
         pw.printf("%-20s %s\n", "Token", "ST_Pos");
 
         for (Pair<String, Integer> pair: this.detectedTokens) {
-            if (isReservedOperatorSeparator(pair.getKey())) {
+            if (isReservedOperatorSeparator(pair.getKey()) || isReservedOperatorSeparator(pair.getKey().toLowerCase())) {
                 pw.printf("%-20s %d\n", pair.getKey(), -1);
             } else if (isIdentifier(pair.getKey()) || isConstant(pair.getKey())) {
                 // index is the position from the ST

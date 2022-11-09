@@ -6,7 +6,7 @@ import java.io.IOException;
 public class Main {
 
     public static void main(String[] args) throws IOException {
-        MyScanner scanner = new MyScanner("programs/p3.txt");
+        MyScanner scanner = new MyScanner("programs/p1.txt");
         scanner.scan();
 
         // PIF

@@ -1,20 +1,8 @@
 Symbol Table as:     Hash Table
 Symbol               ST_Pos
-WRITE                7
-i                    8
-ENDWHILE             10
-n                    13
-len                  28
-FOR                  37
-INT                  41
-100                  48
-0                    49
-sum                  50
-1                    51
-ENDFOR               58
-length               60
-OR                   64
-numbers              85
-WHILE                86
-READ                 90
-ARRAY                92
+max                  35
+0                    48
+nr1                  79
+n1r                  80
+nr3                  81
+nr2                  82
