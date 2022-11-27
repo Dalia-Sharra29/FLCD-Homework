@@ -1,0 +1,27 @@
+SET OF NON-TERMINALS
+program,declist,declaration,type,arraydecl,stmtlist,stmt,simplstmt,assignstmt,expression,term,factor,iostmt,structstmt,ifstmt,whilestmt,forstmt,condition,relation,logicalop
+SET OF TERMINALS
+;,int,boolean,string,char,array,or,and,div,mod,if,else,read,write,while,for,endwhile,endfor,endif,+,-,*,/,<=,>=,>,<,=,!=,^,[,],{,},:,<-,(,), identifier, constant
+PRODUCTIONS
+S -> declist ; { stmtlist }
+declist -> declaration | declaration ; declist
+declaration -> type : identifier | arraydecl
+type -> boolean | char | int | string
+arraydecl -> type array [ constant ]
+stmtlist -> stmt | stmt ; stmtlist
+stmt -> simplstmt | structstmt
+simplstmt -> assginstmt | iostmt
+assignstmt -> identifier <- expression ;
+expression -> expression + term | expression - term | expression / term | expression * term | expression div term | expression mod term | expression ^ term | term
+term -> term * factor | term ^ factor | factor
+factor -> ( expression ) | identifier | constant
+iostmt -> read ( identifier ) | write ( identifier )
+structstmt -> ifstmt | whilestmt | forstmt
+ifstmt -> if ( condition ) stmt endif | if ( condition ) stmt else stmt endif
+whilestmt -> while ( condition ) stmt endwhile
+forstmt -> for ( assignstmt ; condition ; expression) stmt endfor
+condition -> expression relation expression | condition logicalop condition
+relation -> < | <= | = | != | >= | >
+logicalop -> or | and
+STARTING SYMBOL
+program
