@@ -1,10 +1,12 @@
 SET OF NON-TERMINALS
-S,A,B
+S,A,B,C,D
 SET OF TERMINALS
-0,1
+a,+,*,(,)
 PRODUCTIONS
-S -> 0B | 1A
-A -> 0 | 0S | 1AA
-B -> 1 | 1S | 0BB
+S -> B A
+A -> + B A | E
+B -> D C
+C -> * D C | E
+D -> ( S ) | a
 STARTING SYMBOL
 S
