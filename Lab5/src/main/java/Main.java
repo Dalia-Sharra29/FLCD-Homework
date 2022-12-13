@@ -1,10 +1,11 @@
 import model.Grammar;
 import model.Parser;
+import model.ParserOutput;
 
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
-import java.util.Scanner;
+import java.util.*;
 
 public class Main {
     public static void main(String[] args) throws IOException {
@@ -12,6 +13,7 @@ public class Main {
         grammar.readFromFile();
 
         Parser parser = new Parser(grammar);
+        List<String> w = new ArrayList<>();
 
         while (true) {
             display_menu();
@@ -48,11 +50,23 @@ public class Main {
                     System.out.println(grammar.productionForNonTerminal(non_terminal));
                     System.out.println("\n");
                 }
-                case "6" -> {
-                    System.out.println(parser.getFirstSet());
+                case "6" -> System.out.println(parser.getFirstSet());
+                case "7" -> System.out.println(parser.getFollowSet());
+                case "8" -> System.out.println(parser.printParseTable());
+                case "9" -> {
+                    w = promptForSequence();
+                    boolean result = parser.parse(w);
+                    if (result) {
+                        System.out.println("Sequence " + w + " accepted.");
+                        Stack<String> pi = parser.getPi();
+                        System.out.println(pi);
+                    } else {
+                        System.out.println("Sequence " + w + " is not accepted.");
+                    }
                 }
-                case "7" -> {
-                    System.out.println(parser.getFollowSet());
+                case "10" -> {
+                    if(!w.isEmpty())
+                        generateParseTree(parser);
                 }
                 case "0" -> System.exit(0);
                 default -> System.err.println("Unrecognized option");
@@ -68,6 +82,20 @@ public class Main {
         System.out.println("5 - Production for given non-terminal");
         System.out.println("6 - first set");
         System.out.println("7 - follow set");
+        System.out.println("8 - parse table");
+        System.out.println("9 - parse sequence");
+        System.out.println("10 - show parse tree");
         System.out.println("0 - Exit \n");
     }
+
+    private static List<String> promptForSequence() {
+        Scanner inScanner = new Scanner(System.in);
+        return Arrays.asList(inScanner.nextLine().replace("\n", "").split(" "));
+    }
+
+    private static void generateParseTree(Parser parser) {
+        ParserOutput parserOutput = new ParserOutput(parser,"D:/Facultate/Semestrul-5/Formal-Languages-and-Compiler-Design/FLCD-Homework/Lab5/src/main/java/output/out1.txt");
+        parserOutput.printTree();
+    }
+
 }
